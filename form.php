@@ -12,7 +12,9 @@
 
   <script type="text/javascript">
     // This identifies your website in the createToken call below
-    Stripe.setPublishableKey('pk_test_4Q8qFIqHGMKsMc5pQfW78piL');
+	// Replace STRIPE_PUBLISHABLE_KEY with your API key
+	
+    Stripe.setPublishableKey('STRIPE_PUBLISHABLE_KEY');
 
     var stripeResponseHandler = function(status, response) {
       var $form = $('#payment-form');
@@ -38,7 +40,20 @@
         // Disable the submit button to prevent repeated clicks
         $form.find('button').prop('disabled', true);
 
-        Stripe.card.createToken($form, stripeResponseHandler);
+        // Stripe.card.createToken($form, stripeResponseHandler);
+		
+		Stripe.card.createToken({
+  			number: $('.card-number').val(),
+  			cvc: $('.card-cvc').val(),
+  			exp_month: $('.card-expiry-month').val(),
+  			exp_year: $('.card-expiry-year').val(),
+			address_line1: $('.billing-address1').val(),
+			address_line2: $('.billing-address2').val(),
+			address_city: $('.billing-city').val(),
+			address_state: $('.billing-state').val(),
+			address_zip: $('.billing-zip').val(),
+			address_country: $('.billing-country').val()
+		}, stripeResponseHandler);
 
         // Prevent the form from submitting with the default action
         return false;
@@ -89,6 +104,13 @@
         <input type="email" size="20" name="customer_email" />
       </label>
 	</div>
+    
+    <div class="form-row">
+	  <label>
+        <span>Phone Number</span>
+        <input type="text" size="20" name="customer_phone" />
+      </label>
+	</div>
 	
 	</div>
 
@@ -97,39 +119,53 @@
     
     <h2>Shipping Address</h2>
 	
+    <div class="form-row">
+	  <label>
+        <span>First Name</span>
+        <input type="text" size="20" name="shipping_fname" />
+      </label>
+	
+	  <label>
+        <span>Last Name</span>
+        <input type="text" size="20" name="shipping_lname" />
+      </label>
+	</div>
+    
 	<div class="form-row">
 	  <label>
         <span>Street Address</span>
-        <input type="text" size="20" data-stripe="address_line1" name="shipping_address1" required/>
+        <input type="text" size="20" name="shipping_address1" required/>
       </label>
 	</div>
 	
 	<div class="form-row">
 	  <label>
         <span>Street Address 2</span>
-        <input type="text" size="20" data-stripe="address_line2" name="shipping_address2" />
+        <input type="text" size="20" name="shipping_address2" />
       </label>
 	</div>
 	
 	<div class="form-row">
 	  <label>
         <span>City</span>
-        <input type="text" size="20" data-stripe="address_city" name="shipping_city" required/>
+        <input type="text" size="20" name="shipping_city" required/>
       </label>
-      
+    </div>
+    
+    <div class="form-row">  
       <label>
         <span>State</span>
-        <input type="text" size="20" data-stripe="address_state" name="shipping_state" required/>
+        <input type="text" size="20" name="shipping_state" required/>
       </label>
       
       <label>
         <span>Zip</span>
-        <input type="text" size="20" data-stripe="address_zip" name="shipping_zip" required/>
+        <input type="text" size="20" name="shipping_zip" required/>
       </label>
       
       <label>
         <span>Country</span>
-          <select name="Country" data-stripe="address_country" name="shipping_country" required/> 
+          <select name="Country" name="shipping_country" required/> 
 			<option value="" selected="selected">Select Country</option> 
 			<option value="United States">United States</option> 
 			<option value="United Kingdom">United Kingdom</option> 
@@ -391,39 +427,54 @@
 	</div>
 	
     <div id="billing_fields" style="display:block;">
+    
+    <div class="form-row">
+	  <label>
+        <span>First Name</span>
+        <input type="text" size="20" name="billing_fname" class="billing-fname" />
+      </label>
+	
+	  <label>
+        <span>Last Name</span>
+        <input type="text" size="20" name="billing_lname" class="billing-lname" />
+      </label>
+	</div>
+    
 	<div class="form-row">
 	  <label>
         <span>Street Address</span>
-        <input type="text" size="20" data-stripe="address_line1" name="billing_address1" />
+        <input type="text" size="20" data-stripe="address_line1" name="billing_address1" class="billing-address1"/>
       </label>
 	</div>
 	
 	<div class="form-row">
 	  <label>
         <span>Street Address 2</span>
-        <input type="text" size="20" data-stripe="address_line2" name="billing_address2" />
+        <input type="text" size="20" data-stripe="address_line2" name="billing_address2" class="billing-address2"/>
       </label>
 	</div>
 	
 	<div class="form-row">
 	  <label>
         <span>City</span>
-        <input type="text" size="20" data-stripe="address_city" name="billing_city" />
+        <input type="text" size="20" data-stripe="address_city" name="billing_city" class="billing-city"/>
       </label>
-      
+    </div>
+    
+    <div class="form-row">  
       <label>
         <span>State</span>
-        <input type="text" size="20" data-stripe="address_state" name="billing_state" />
+        <input type="text" size="20" data-stripe="address_state" name="billing_state" class="billing-state"/>
       </label>
       
       <label>
         <span>Zip</span>
-        <input type="text" size="20" data-stripe="address_zip" name="billing_zip" />
+        <input type="text" size="20" data-stripe="address_zip" name="billing_zip" class="billing-zip"/>
       </label>
       
       <label>
         <span>Country</span>
-          <select name="Country" data-stripe="address_country" name="billing_country" /> 
+          <select name="Country" data-stripe="address_country" name="billing_country" class="billing-country"/> 
 			<option value="" selected="selected">Select Country</option> 
 			<option value="United States">United States</option> 
 			<option value="United Kingdom">United Kingdom</option> 
@@ -681,24 +732,24 @@
     <div class="form-row">
       <label>
         <span>Card Number</span>
-        <input type="text" size="20" data-stripe="number"/>
+        <input type="text" size="20" data-stripe="number" class="card-number"/>
       </label>
     </div>
 
     <div class="form-row">
       <label>
         <span>CVC</span>
-        <input type="text" size="4" data-stripe="cvc"/>
+        <input type="text" size="4" data-stripe="cvc" class="card-cvc"/>
       </label>
     </div>
 
     <div class="form-row">
       <label>
         <span>Expiration (MM/YYYY)</span>
-        <input type="text" size="2" data-stripe="exp-month"/>
+        <input type="text" size="2" data-stripe="exp-month" class="card-expiry-month"/>
       </label>
       <span> / </span>
-      <input type="text" size="4" data-stripe="exp-year"/>
+      <input type="text" size="4" data-stripe="exp-year" class="card-expiry-year"/>
     </div>
     
     </div>
