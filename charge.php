@@ -2,16 +2,13 @@
 
 $name = $_POST['customer_fname']." ".$_POST['customer_lname'];
 $email = $_POST['customer_email'];
+$phone = $_POST['customer_phone'];
+$shipping_name = $_POST['shipping_fname']." ".$_POST['shipping_lname'];
 $shipping_address = $_POST['shipping_address1']." ".$_POST['shipping_address2'];
-$shipping_city = $_POST['shipping_city'];
-$shipping_state = $_POST['shipping_state'];
-$shipping_zip = $_POST['shipping_zip'];
-$shipping_country = $_POST['shipping_country'];
+$shipping_address2 = $_POST['shipping_city'].", ".$_POST['shipping_state']." ".$_POST['shipping_zip']." ".$_POST['shipping_country'];
+$billing_name = $_POST['billing_fname']." ".$_POST['billing_lname'];
 $billing_address = $_POST['billing_address1']." ".$_POST['billing_address2'];
-$billing_city = $_POST['billing_city'];
-$billing_state = $_POST['billing_state'];
-$billing_zip = $_POST['billing_zip'];
-$billing_country = $_POST['billing_country'];
+$billing_address2 = $_POST['billing_city'].", ".$_POST['billing_state']." ".$_POST['billing_zip']." ".$_POST['billing_country'];
 $billing_shipping = $_POST['billing_shipping'];
 
  error_reporting(E_ALL);
@@ -22,31 +19,26 @@ $billing_shipping = $_POST['billing_shipping'];
   $token  = $_POST['stripeToken'];
 
   $customer_details = array(
-      'Customer Name' => $name
+      'Customer Name' => $name,
+	  'Customer Phone' => $phone
   );
 
   $address1 = array(
+  	  'Shipping Name' => $shipping_name,
       'Shipping Address' => $shipping_address,
-	  'Shipping City' => $shipping_city,
-	  'Shipping State' => $shipping_state,
-	  'Shipping Zip Code' => $shipping_zip,
-	  'Shipping Country' => $shipping_country,
+	  'Shipping Address 2' => $shipping_address2
   );
   
     if ($billing_shipping === 'same') { 
-  	  $billing_address = $shipping_address;
-	  $billing_city = $shipping_city;
-	  $billing_state = $shipping_state;
-	  $billing_zip = $shipping_zip;
-	  $billing_country = $shipping_country;
+  	  $billing_name = $shipping_name;
+	  $billing_address = $shipping_address;
+	  $billing_address2 = $shipping_address2;
 	 }
   
   $address2 = array(
+  	  'Billing Name' => $billing_name,
 	  'Billing Address' => $billing_address,
-	  'Billing City' => $billing_city,
-	  'Billing State' => $billing_state,
-	  'Billing Zip Code' => $billing_zip,
-	  'Billing Country' => $billing_country,
+	  'Billing Address 2' => $billing_address2
   );
   
   $customer = Stripe_Customer::create(array(
@@ -55,11 +47,12 @@ $billing_shipping = $_POST['billing_shipping'];
       'card'  => $token
   ));
 
+
   $charge = Stripe_Charge::create(array(
       'customer' => $customer->id,
       'amount'   => 2000,
-      'currency' => 'usd'
-  ));
+      'currency' => 'usd',
+	));
 
   echo '<h1>Successfully charged $20.00!</h1>';
 ?>
